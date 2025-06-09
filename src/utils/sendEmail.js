@@ -1,14 +1,10 @@
 import nodemailer from "nodemailer";
-// export const sendEmail = async ({ email, subject, message }) => {
-  
- 
-//   await transpoter.sendMail(options);
-// };
+
 import dotenv from 'dotenv';
 dotenv.config();
 
-
-export const transporter = nodemailer.createTransport({
+export const sendEmail = async (options)=>{
+    const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: Number(process.env.SMTP_PORT),
   secure: false, 
@@ -18,4 +14,23 @@ export const transporter = nodemailer.createTransport({
   },
 });
 
-  
+const mailoptions = {
+  from: process.env.SMTP_MAIL,
+  to: options.email,
+  subject: options.subject,
+  html: options.html,
+};
+
+  try {
+  await transporter.sendMail(mailoptions);
+  console.log("Email sent successfully");
+} catch (error) {
+  console.error("Email send failed:", error);
+  throw error;
+}
+
+
+}
+
+
+
